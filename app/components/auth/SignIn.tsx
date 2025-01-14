@@ -9,10 +9,20 @@ const SignIn = () => {
     const navigation = useNavigation();
     const actionData = useActionData()
     const status = navigation.state !== 'idle';
-    console.log("actiondata", actionData)
+    // const handleSubmit = (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     const form = e.currentTarget as HTMLFormElement;
+    //     const username = (form.elements.namedItem('username') as HTMLInputElement).value;
+
+    //     if (username.length !== 10) {
+    //         alert("Username must be exactly 10 characters long.");
+    //         return;
+    //     }
+    //     submit(form, { method: 'POST' })
+    // }
     return (
         <>
-            <Form method="post" className="flex flex-col items-center justify-center h-full">
+            <Form method="post" className="flex flex-col items-center justify-center h-full" >
                 <h1 className="text-3xl font-outfit font-bold mb-4">Sign In</h1>
                 <div className="flex space-x-3 mb-4">
                     <span className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300">
@@ -39,6 +49,7 @@ const SignIn = () => {
                     type="password"
                     name='password'
                     placeholder="Password"
+                    min={3}
                     className="w-full bg-gray-100 rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 />
 
