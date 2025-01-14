@@ -1,9 +1,14 @@
-import { Form, Link } from "@remix-run/react"
+import { Form, Link, useActionData, useNavigation } from "@remix-run/react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { AlertCircle } from "lucide-react";
 
 
 const SignUp = () => {
+    const navigation = useNavigation();
+    const actionData = useActionData()
+    const status = navigation.state !== 'idle';
     return (
         <>  <Form method="post" className="flex flex-col items-center justify-center h-full">
             <h1 className="text-3xl font-outfit font-bold mb-4">Sign Up</h1>
@@ -43,12 +48,23 @@ const SignUp = () => {
 
 
             <Button
-
+                disabled={status}
                 className="font-outfit   bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg mt-3 hover:bg-blue-700">
-                Sign Up
+                {status ? "Submitting" : "Sign Up"}
             </Button>
+           
+            {
+                    actionData ? <>  <Alert className="mt-3" variant="destructive">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>
+                            {actionData?.error}:{actionData?.status}
+                        </AlertDescription>
+                    </Alert></> : <></>
 
+                }
         </Form>
+           
         </>
     )
 }

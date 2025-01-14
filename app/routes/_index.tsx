@@ -1,9 +1,8 @@
 import { redirect, type ActionFunctionArgs, type MetaFunction } from "@remix-run/node";
-import { useSearchParams } from "@remix-run/react";
 import AuthSwitcher from "~/components/auth/AuthSwitcher";
-import SignIn from "~/components/auth/SignIn";
-import SignUp from "~/components/auth/Signup";
+
 import WrapperContainer from "~/components/Wrapper/Wrapper";
+import { signin, signup } from "~/server/services/auth.server";
 export const meta: MetaFunction = () => {
   return [
     { title: "Authentication " },
@@ -12,21 +11,32 @@ export const meta: MetaFunction = () => {
 };
 
 export async function action({ request }: ActionFunctionArgs) {
+  const url = new URL(request.url);
+  const mode = url.searchParams.get("mode");
+  const authMode = mode ? mode : 'signin';
   const body = await request.formData();
-  const newUser = {
-    email: body.get("email"),
-    password: body.get("password"),
-  };
 
-  console.log(newUser);
-  return redirect("/user");
+
+  if (authMode === 'signin') {
+    const result = await signin(body.get("email") as string, body.get("password") as string)
+    if (result.status !== 200) {
+      return result;
+    }
+    return redirect('/user')
+  } else {
+    const result = await signup(body.get("email") as string, body.get("password") as string, body.get("username") as string)
+    if (result.status !== 201) {
+      return result;
+    }
+    return redirect('/')
+  }
+
 }
 
 const Index = () => {
- 
   return (
     <WrapperContainer>
-    <AuthSwitcher/>
+      <AuthSwitcher />
 
     </WrapperContainer>
   );
